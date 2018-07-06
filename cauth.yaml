@@ -1,0 +1,3 @@
+- hosts: cauth-server
+  tasks:
+    - include_tasks: tasks/setup.yaml

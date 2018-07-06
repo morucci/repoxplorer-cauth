@@ -1,0 +1,5 @@
+cookie_domain: repoxplorer-demo.okombu.com
+github_redirect_uri: https://repoxplorer-demo.okombu.com/auth/login/oauth2/callback
+github_client_id: 
+github_client_secret:
+admin_token:

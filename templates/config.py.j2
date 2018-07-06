@@ -1,0 +1,80 @@
+#
+# Copyright (C) 2014 eNovance SAS <licensing@enovance.com>
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+
+# Pecan Application Configurations
+app = {
+    'root': 'cauth.controllers.root.RootController',
+    'modules': ['cauth'],
+    'static_root': '%(confdir)s/public',
+    'template_path': '%(confdir)s/templates',
+    'priv_key_path': '/var/lib/cauth/keys/privkey.pem',
+    'cookie_domain': '{{ cookie_domain }}',
+    'debug': True,
+    'cookie_period': 43200
+}
+
+server = {
+    'port': '8888',
+    'host': '0.0.0.0',
+}
+
+logging = {
+    'loggers': {
+        'cauth': {'level': 'DEBUG',
+                  'handlers': ['file_handler']},
+        '__force_dict__': True
+    },
+    'handlers': {
+        'file_handler': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'level': 'DEBUG',
+            'formatter': 'simple',
+            'filename': '/var/log/cauth/cauth.log',
+        }
+    },
+    'formatters': {
+        'simple': {
+            'format': ('%(asctime)s %(levelname)-5.5s [%(name)s]'
+                       '[%(threadName)s] %(message)s')
+        }
+    }
+}
+
+# Authorization configurations
+auth = {
+    'github': {
+        'redirect_uri': '{{ github_redirect_uri }}',
+        'client_id': '{{ github_client_id }}',
+        'client_secret': '{{ github_client_secret }}',
+        'allowed_organizations': ''
+    },
+}
+
+logout = {
+    'services': [],
+}
+
+sqlalchemy = {
+    'url': 'sqlite:////var/lib/cauth/state_mapping.db',
+    'echo': True,
+    'encoding': 'utf-8'
+}
+
+services = ['repoxplorer']
+
+repoxplorer = {
+    'url': 'http://localhost:51000',
+    'admin_token': '{{ admin_token }}', 
+}
