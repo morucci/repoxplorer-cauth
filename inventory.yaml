@@ -1,2 +1,2 @@
 [cauth-server]
-repoxplorer-demo
+localhost ansible_connection=local

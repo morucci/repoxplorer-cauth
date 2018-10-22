@@ -3,26 +3,31 @@
   yum:
     name: http://koji.softwarefactory-project.io/kojifiles/packages/sf-release/9999.8.g4a0900f/8.el7/noarch/sf-release-9999.8.g4a0900f-8.el7.noarch.rpm
     state: present
+  become: yes
 
 - name: Install cauth
   yum:
     name: python2-cauth
-    state: present
+    state: latest
+  become: yes
 
 - name: Remove SF repo
   yum:
     name: sf-release
     state: absent
+  become: yes
 
 - name: Install httpd
   yum:
     name: httpd
     state: present
+  become: yes
 
 - name: ensure /var/lib/cauth/keys exists
   file:
     path: "/var/lib/cauth/keys"
     state: directory
+  become: yes
 
 - name: install pubkey.pem
   copy:
@@ -30,6 +35,7 @@
     dest: "/var/lib/cauth/keys/pubkey.pem"
     mode: 0644
     setype: httpd_sys_content_t
+  become: yes
 
 - name: install privkey.pem
   copy:
@@ -37,36 +43,43 @@
     dest: "/var/lib/cauth/keys/privkey.pem"
     mode: 0640
     setype: httpd_sys_content_t
+  become: yes
 
 - name: install /etc/cauth/config.py
   template:
     src: config.py.j2
     dest: "/etc/cauth/config.py"
     mode: 0644
+  become: yes
 
 - name: install login.html
   copy:
     src: login.html
     dest: "/etc/cauth/templates/login.html"
     mode: 0644
+  become: yes
 
 - name: install tkt apache module configuration
   copy:
     content: "LoadModule auth_pubtkt_module modules/mod_auth_pubtkt.so\n"
     dest: /etc/httpd/conf.modules.d/00-tkt.conf
     mode: 0644
+  become: yes
 
 - name: install tkt apache pubtkt configuration
   copy:
     content: "TKTAuthPublicKey /var/lib/cauth/keys/pubkey.pem\n"
     dest: /etc/httpd/conf.d/auth_pubtkt.conf
     mode: 0644
+  become: yes
 
 - name: install cauth apache configuration
   copy:
     src: cauth.conf
     dest: /etc/httpd/conf.d/cauth.conf
     mode: 0644
+  become: yes
 
 - name: httpd authorize outbound connection
   command: setsebool -P httpd_can_network_connect 1
+  become: yes
